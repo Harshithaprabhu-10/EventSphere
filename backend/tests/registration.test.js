@@ -61,10 +61,10 @@ describe('POST /api/registrations/:eventId — concurrency safety', () => {
     );
 
     const successes = results.filter((r) => r.statusCode === 201);
-    const failures = results.filter((r) => r.statusCode === 409);
+    const waitlisted = results.filter((r) => r.statusCode === 202);
 
     expect(successes.length).toBe(1);
-    expect(failures.length).toBe(4);
+    expect(waitlisted.length).toBe(4);    
 
     // Confirm the database state matches — no overselling, no drift
     const finalEvent = await Event.findById(event._id);
@@ -88,8 +88,10 @@ describe('POST /api/registrations/:eventId — concurrency safety', () => {
     );
 
     const successes = results.filter((r) => r.statusCode === 201);
+    const waitlisted = results.filter((r) => r.statusCode === 202);
 
-    expect(successes.length).toBe(3);
+    expect(successes.length).toBe(1);
+    expect(waitlisted.length).toBe(4);
 
     const finalEvent = await Event.findById(event._id);
     expect(finalEvent.seatsLeft).toBe(0);
