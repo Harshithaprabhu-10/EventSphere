@@ -1,14 +1,14 @@
 const { Resend } = require('resend');
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-/**
- * Sends an email via Resend. Deliberately NOT awaited by callers in most cases —
- * email sending shouldn't block the HTTP response. Errors are caught and logged
- * here so a failed email never crashes the request that triggered it.
- */
 const sendEmail = async ({ to, subject, html }) => {
+  // Skip silently if no API key is configured (test environment or local dev without email)
+  if (!process.env.RESEND_API_KEY) {
+    console.log(`[sendEmail] No RESEND_API_KEY configured — skipping email to ${to}`);
+    return;
+  }
+
   try {
+    const resend = new Resend(process.env.RESEND_API_KEY);
     await resend.emails.send({
       from: 'EventSphere <onboarding@resend.dev>',
       to,
@@ -16,7 +16,6 @@ const sendEmail = async ({ to, subject, html }) => {
       html,
     });
   } catch (error) {
-    // Log but never throw — a failed email must not break registration/cancellation.
     console.error(`Failed to send email to ${to}: ${error.message}`);
   }
 };

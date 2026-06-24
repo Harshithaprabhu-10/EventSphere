@@ -34,6 +34,7 @@ jobs:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           JWT_EXPIRES_IN: 7d
           MONGO_URI: ${{ secrets.MONGO_URI }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
 
   build-backend:
     name: Build backend Docker image
