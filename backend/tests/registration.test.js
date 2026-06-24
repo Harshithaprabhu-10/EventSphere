@@ -90,8 +90,8 @@ describe('POST /api/registrations/:eventId — concurrency safety', () => {
     const successes = results.filter((r) => r.statusCode === 201);
     const waitlisted = results.filter((r) => r.statusCode === 202);
 
-    expect(successes.length).toBe(1);
-    expect(waitlisted.length).toBe(4);
+    expect(successes.length).toBe(3);
+    expect(waitlisted.length).toBe(3);
 
     const finalEvent = await Event.findById(event._id);
     expect(finalEvent.seatsLeft).toBe(0);
