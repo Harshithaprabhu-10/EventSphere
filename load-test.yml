@@ -1,0 +1,27 @@
+config:
+  target: "http://localhost:5000"
+  phases:
+    - duration: 30
+      arrivalRate: 5
+      rampTo: 20
+      name: "Ramp up"
+    - duration: 30
+      arrivalRate: 20
+      name: "Sustained load"
+  defaults:
+    headers:
+      Content-Type: "application/json"
+      Authorization: "Bearer PASTE_A_REAL_VALID_TOKEN_HERE"
+
+scenarios:
+  - name: "Browse events"
+    weight: 70
+    flow:
+      - get:
+          url: "/api/events?page=1&limit=10"
+
+  - name: "Register for event"
+    weight: 30
+    flow:
+      - post:
+          url: "/api/registrations/PASTE_YOUR_TEST_EVENT_ID_HERE"
